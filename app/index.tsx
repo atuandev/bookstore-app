@@ -1,9 +1,10 @@
+import { router } from 'expo-router'
+
 import { Button, ButtonText } from '@/components/ui/button'
 import { Box } from '@/components/ui/box'
 import { Text } from '@/components/ui/text'
 import { Image } from '@/components/ui/image'
 import { images } from '@/constants'
-import { router } from 'expo-router'
 
 export default function WelcomeScreen() {
   return (
@@ -17,16 +18,16 @@ export default function WelcomeScreen() {
             resizeMode="contain"
           />
 
-          <Text className="font-extrabold text-primary text-4xl tracking-widest">
+          <Text className="font-extrabold text-primary-500 text-4xl tracking-widest">
             Book E-Commerce
           </Text>
         </Box>
 
         <Box className="mt-auto gap-2">
-          <Button size="xl" onPress={() => router.push('/sign-up')}>
+          <Button size="xl" onPress={() => router.replace('/sign-up')}>
             <ButtonText>Get Started!</ButtonText>
           </Button>
-          <Button size="xl" variant="outline" onPress={() => router.push('/sign-in')}>
+          <Button size="xl" variant="outline" onPress={() => router.replace('/sign-in')}>
             <ButtonText>Sign In</ButtonText>
           </Button>
         </Box>

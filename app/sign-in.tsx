@@ -1,15 +1,15 @@
-import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 import KeyboardProvider from '@/components/common/KeyboardProvider'
-import FormInput from '@/components/common/FormInput'
 import { CustomIcon, IconType } from '@/components/common/CustomIcon'
-import { Box } from '@/components/ui/box'
+import FormInput from '@/components/common/FormInput'
 import { Button, ButtonText } from '@/components/ui/button'
+import { Box } from '@/components/ui/box'
 import { Text } from '@/components/ui/text'
+import { useRouter } from 'expo-router'
 
 const SignInScreen = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +17,7 @@ const SignInScreen = () => {
     password: '',
   })
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = async () => {
     if (!formData.username || !formData.password) {
@@ -29,7 +30,7 @@ const SignInScreen = () => {
 
     console.log(formData)
 
-    // router.push('/(tabs)')
+    router.push('/(tabs)')
   }
 
   return (
@@ -37,8 +38,8 @@ const SignInScreen = () => {
       <KeyboardProvider iosHeight={-150}>
         <Box className="w-full min-h-[85vh]">
           <Box className="mt-10">
-            <Text className="font-extrabold text-3xl text-primary">Hey,</Text>
-            <Text className="font-extrabold text-3xl text-primary">
+            <Text className="font-extrabold text-3xl text-primary-500">Hey,</Text>
+            <Text className="font-extrabold text-3xl text-primary-500">
               Welcome back
             </Text>
           </Box>
@@ -98,7 +99,7 @@ const SignInScreen = () => {
                 Don't have an account?
               </Text>
               <TouchableOpacity onPress={() => router.push('/sign-up')}>
-                <Text className="text-primary text-lg font-semibold">
+                <Text className="text-primary-500 text-lg font-semibold">
                   Sign up
                 </Text>
               </TouchableOpacity>

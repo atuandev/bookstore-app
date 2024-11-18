@@ -37,8 +37,8 @@ const SignUpScreen = () => {
       <KeyboardProvider iosHeight={-150}>
         <Box className="w-full min-h-[85vh]">
           <Box className="mt-10">
-            <Text className="font-extrabold text-3xl text-primary">Let's</Text>
-            <Text className="font-extrabold text-3xl text-primary">
+            <Text className="font-extrabold text-3xl text-primary-500">Let's</Text>
+            <Text className="font-extrabold text-3xl text-primary-500">
               Get started
             </Text>
           </Box>
@@ -135,7 +135,7 @@ const SignUpScreen = () => {
                 Already have an account?
               </Text>
               <TouchableOpacity onPress={() => router.push('/sign-in')}>
-                <Text className="text-primary text-lg font-semibold">
+                <Text className="text-primary-500 text-lg font-semibold">
                   Log in
                 </Text>
               </TouchableOpacity>
