@@ -30,7 +30,7 @@ const SignInScreen = () => {
 
     console.log(formData)
 
-    router.push('/(tabs)')
+    router.push('/(tabs)/books')
   }
 
   return (

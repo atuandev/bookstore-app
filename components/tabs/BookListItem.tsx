@@ -1,10 +1,11 @@
+import { Link } from 'expo-router'
+
 import { Book } from '@/mockData/books'
 import { Box } from '@/components/ui/box'
 import { Text } from '@/components/ui/text'
 import { Image } from '@/components/ui/image'
-import { AddIcon, FavouriteIcon } from '@/components/ui/icon'
-import { Button, ButtonIcon, ButtonText } from '@/components/ui/button'
 import { formatVND } from '@/utils/format'
+import { CustomIcon, IconType } from '@/components/common/CustomIcon'
 
 type BookListItemProps = {
   book: Book
@@ -13,32 +14,37 @@ type BookListItemProps = {
 export default function BookListItem({ book }: BookListItemProps) {
   return <>
     <Box className="p-4 rounded-lg max-w-[360px] bg-white flex-1 m-1">
-      <Image
-        source={{ uri: book.bookImages[0].url }}
-        alt={book.title}
-        resizeMode="contain"
-        className="mb-6 h-[200px] w-full rounded-md"
-      />
-      <Text className="font-semibold mb-2 text-typography-700 truncate">
-        {book.title}
-      </Text>
-      <Text className="mb-4 text-2xl font-bold text-primary-500 mt-auto">
-        {formatVND(book.price)}
-      </Text>
-      <Box className="flex-col gap-2">
-        <Button className="px-4 py-2">
-          <ButtonIcon as={AddIcon} />
-          <ButtonText size="sm">Add to cart</ButtonText>
-        </Button>
-        <Button
-          variant="outline"
-          className="px-4 py-2 border-outline-300 sm:flex-1"
-        >
-          <ButtonIcon as={FavouriteIcon} />
-          <ButtonText size="sm">
-            Wishlist
-          </ButtonText>
-        </Button>
+      <Link href={`/books/${book.id}`}>
+        <Box className="flex-1 w-full">
+          <Image
+            source={{ uri: book.bookImages[0].url }}
+            alt={book.title}
+            resizeMode="contain"
+            className="mb-6 h-[200px] w-full rounded-md"
+          />
+          <Text className="font-semibold mb-2 text-typography-700 truncate">
+            {book.title}
+          </Text>
+        </Box>
+      </Link>
+      <Box className="flex-row gap-1 items-center mt-auto">
+        <Text className="text-xl font-bold text-primary-500">
+          {formatVND(book.price)}
+        </Text>
+        <Text strikeThrough className="text-sm text-typography-500">
+          {formatVND(book.price + 20000)}
+        </Text>
+      </Box>
+      <Box className="flex-row gap-1 items-center justify-between mt-2">
+        <Box className="flex-row items-center gap-1">
+          <CustomIcon icon={{ name: 'star', type: IconType.AntDesign }} size={14} color="#fbbf24" />
+          <Text className="text-sm font-bold">
+            {book.rating}
+          </Text>
+        </Box>
+        <Text className="text-sm text-typography-500">
+          Đã bán <Text className="text-sm font-medium text-typography-700">{book.sold}</Text>
+        </Text>
       </Box>
     </Box>
   </>

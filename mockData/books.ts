@@ -20,6 +20,7 @@ export type Book = {
   bookImages: {
     url: string
   }[]
+  rating: number
 }
 
 export const books: Book[] = [
@@ -36,7 +37,7 @@ export const books: Book[] = [
     importPrice: 150000,
     price: 175000,
     stock: 10,
-    sold: 0,
+    sold: 18,
     isNew: true,
     isFeatured: true,
     status: true,
@@ -44,9 +45,10 @@ export const books: Book[] = [
     publisherId: 'Nhà Xuất Bản Trẻ',
     bookImages: [
       {
-        url: 'https://cdn0.fahasa.com/media/catalog/product/h/s/hsp-bia-cung---xuat-in-goc-b1_1.jpg',
+        url: 'https://cdn0.fahasa.com/media/catalog/product/h/s/hsp-bia-cung---xuat-in-goc-b1.jpg',
       },
     ],
+    rating: 4.5,
   },
   {
     id: '2',
@@ -72,6 +74,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/n/h/nha-gia-kim-b.jpg',
       },
     ],
+    rating: 4.8,
   },
   {
     id: '3',
@@ -97,6 +100,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/flashmagazine/images/page_images/dac_nhan_tam/2024_07_15_15_41_30_1-390x510.jpg',
       },
     ],
+    rating: 4.7,
   },
   {
     id: '4',
@@ -122,6 +126,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/flashmagazine/images/page_images/sapiens_luoc_su_loai_nguoi/2023_03_21_16_35_44_1-390x510.jpg',
       },
     ],
+    rating: 4.9,
   },
   {
     id: '5',
@@ -147,6 +152,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/8/9/8934974180548.jpg',
       },
     ],
+    rating: 4.6,
   },
   {
     id: '6',
@@ -172,6 +178,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/8/9/8935280400733.jpg',
       },
     ],
+    rating: 4.8,
   },
   {
     id: '7',
@@ -197,6 +204,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/n/n/nna-hvtcx.jpg',
       },
     ],
+    rating: 4.7,
   },
   {
     id: '8',
@@ -222,6 +230,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/i/m/image_214482_1.jpg',
       },
     ],
+    rating: 4.6,
   },
   {
     id: '9',
@@ -247,6 +256,7 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/i/m/image_240804_1.jpg',
       },
     ],
+    rating: 4.9,
   },
   {
     id: '10',
@@ -272,5 +282,6 @@ export const books: Book[] = [
         url: 'https://cdn0.fahasa.com/media/catalog/product/8/9/8935086840252.jpg',
       },
     ],
+    rating: 4.7,
   },
 ]
