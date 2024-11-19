@@ -12,7 +12,15 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) =>
-            <CustomIcon icon={{ name: 'home', type: IconType.FontAwesomeIcon }} size={28} color={color} />,
+            <CustomIcon icon={{ name: 'home', type: IconType.FontAwesomeIcon }} size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          title: 'Cart',
+          tabBarIcon: ({ color }) =>
+            <CustomIcon icon={{ name: 'shopping-cart', type: IconType.FontAwesomeIcon }} size={24} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -20,7 +28,7 @@ export default function TabLayout() {
         options={{
           title: 'User',
           tabBarIcon: ({ color }) =>
-            <CustomIcon icon={{ name: 'user', type: IconType.FontAwesomeIcon }} size={28} color={color} />,
+            <CustomIcon icon={{ name: 'user', type: IconType.FontAwesomeIcon }} size={24} color={color} />,
 
         }}
       />

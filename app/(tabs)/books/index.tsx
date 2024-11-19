@@ -9,6 +9,7 @@ export default function HomeScreen() {
     <FlatList
       data={books}
       numColumns={2}
+      keyExtractor={item => item.id.toString()}
       renderItem={({ item }) => (
         <BookListItem book={item} />
       )}
