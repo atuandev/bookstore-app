@@ -9,15 +9,17 @@ import FormInput from '@/components/common/FormInput'
 import { Button, ButtonText } from '@/components/ui/button'
 import { Box } from '@/components/ui/box'
 import { Text } from '@/components/ui/text'
-import { useRouter } from 'expo-router'
+import { router, useRouter } from 'expo-router'
+import { usersData } from '@/mockData/user'
+import { useUserStore } from '@/stores/user'
 
 const SignInScreen = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: 'admin',
+    password: 'admin',
   })
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const { setUser } = useUserStore()
 
   const handleSubmit = async () => {
     if (!formData.username || !formData.password) {
@@ -26,11 +28,21 @@ const SignInScreen = () => {
         text1: 'Login failed',
         text2: 'Please fill in all fields',
       })
+      return
     }
 
-    console.log(formData)
-
-    router.push('/(tabs)/books')
+    usersData.forEach(user => {
+      if (user.username === formData.username && user.password === formData.password) {
+        setUser(user)
+        router.replace('/(tabs)/books')
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Login failed',
+          text2: 'Invalid username or password',
+        })
+      }
+    })
   }
 
   return (

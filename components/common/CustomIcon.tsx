@@ -3,6 +3,7 @@ import {
   MaterialIcons,
   Ionicons,
   AntDesign,
+  Feather
 } from '@expo/vector-icons'
 import { View } from 'react-native'
 
@@ -11,6 +12,7 @@ export enum IconType {
   FontAwesomeIcon,
   Ionicons,
   AntDesign,
+  FeatherIcon,
 }
 
 type CustomProps = {
@@ -25,6 +27,7 @@ type CustomProps = {
       }
     | { type: IconType.Ionicons; name: keyof typeof Ionicons.glyphMap }
     | { type: IconType.AntDesign; name: keyof typeof AntDesign.glyphMap }
+    | { type: IconType.FeatherIcon; name: keyof typeof Feather.glyphMap }
   size?: number
   color?: string
   className?: string
@@ -49,6 +52,9 @@ export const CustomIcon = ({
       )}
       {icon.type === IconType.AntDesign && (
         <AntDesign name={icon.name} size={size} color={color} />
+      )}
+      {icon.type === IconType.FeatherIcon && (
+        <Feather name={icon.name} size={size} color={color} />
       )}
     </View>
   )

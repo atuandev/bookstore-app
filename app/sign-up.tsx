@@ -10,6 +10,8 @@ import { CustomIcon, IconType } from '@/components/common/CustomIcon'
 import { Box } from '@/components/ui/box'
 import { Button, ButtonText } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
+import { useUserStore } from '@/stores/user'
+import { usersData } from '@/mockData/user'
 
 const SignUpScreen = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +21,7 @@ const SignUpScreen = () => {
     password: '',
   })
   const [isLoading, setIsLoading] = useState(false)
+  const { setUser } = useUserStore()
 
   const handleSubmit = async () => {
     if (!formData.email || !formData.password) {
@@ -29,7 +32,14 @@ const SignUpScreen = () => {
       })
     }
 
-    console.log(formData)
+    const user = {
+      id: Math.random(),
+      ...formData,
+    }
+    usersData.push(user)
+    setUser(user)
+
+    router.replace('/(tabs)/books')
   }
 
   return (

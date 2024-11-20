@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { FlatList } from 'react-native'
 
 import { Box } from '@/components/ui/box'
@@ -6,9 +7,8 @@ import { Button, ButtonIcon, ButtonText } from '@/components/ui/button'
 import { AddIcon, CheckIcon, RemoveIcon, TrashIcon } from '@/components/ui/icon'
 import { Image } from '@/components/ui/image'
 import { formatVND } from '@/utils/format'
-import { useCartStore } from '@/stores/cart-store'
-import { useState } from 'react'
 import { Checkbox, CheckboxGroup, CheckboxIcon, CheckboxIndicator } from '@/components/ui/checkbox'
+import { useCartStore } from '@/stores/cart'
 
 export default function CartScreen() {
   const [selectedItems, setSelectedItems] = useState<string[]>([])

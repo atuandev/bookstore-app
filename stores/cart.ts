@@ -1,15 +1,15 @@
 import { create } from 'zustand/react'
-  import { Cart } from '@/mockData/cart'
+import { Cart } from '@/mockData/cart'
 
-  type CartType = {
-    carts: Cart[]
-    addCart: (cart: Cart) => void
-      removeCart: (bookId: string) => void
+type CartType = {
+  carts: Cart[]
+  addCart: (cart: Cart) => void
+  removeCart: (bookId: string) => void
   increaseQuantity: (bookId: string, quantity?: number) => void
   decreaseQuantity: (bookId: string) => void
 }
 
-export const useCartStore = create<CartType>((set, get) => ({
+const useCartStore = create<CartType>((set, get) => ({
   carts: [],
 
   addCart: (cart: Cart) => set(state => ({ carts: [...state.carts, cart] })),
@@ -29,3 +29,5 @@ export const useCartStore = create<CartType>((set, get) => ({
     } : cart),
   })),
 }))
+
+export { useCartStore }

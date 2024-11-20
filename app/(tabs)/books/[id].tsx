@@ -11,7 +11,7 @@ import { Divider } from '@/components/ui/divider'
 import { ScrollView } from 'react-native'
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button'
 import { AddIcon, RemoveIcon } from '@/components/ui/icon'
-import { useCartStore } from '@/stores/cart-store'
+import { useCartStore } from '@/stores/cart'
 
 export default function BookDetail() {
   const { addCart, carts, increaseQuantity } = useCartStore()

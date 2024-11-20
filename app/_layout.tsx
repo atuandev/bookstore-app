@@ -2,6 +2,7 @@ import '@/global.css'
 import { Stack } from 'expo-router'
 
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
+import Toast from 'react-native-toast-message'
 
 export default function RootLayout() {
   return (
@@ -12,6 +13,7 @@ export default function RootLayout() {
         <Stack.Screen name="sign-up" />
         <Stack.Screen name="sign-in" />
       </Stack>
+      <Toast />
     </GluestackUIProvider>
   )
 }
