@@ -30,6 +30,7 @@ const SignUpScreen = () => {
         text1: 'Login failed',
         text2: 'Please fill in all fields',
       })
+      return
     }
 
     const user = {

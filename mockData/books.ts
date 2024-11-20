@@ -23,6 +23,16 @@ export type Book = {
   rating: number
 }
 
+export const categories = [
+  'Tiểu Thuyết',
+  'Văn Học',
+  'Kỹ Năng Sống',
+  'Lịch Sử',
+  'Truyện Ngắn',
+  'Giáo Dục',
+  'Phong Cách Sống',
+]
+
 export const books: Book[] = [
   {
     id: '1',

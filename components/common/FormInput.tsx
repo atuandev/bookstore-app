@@ -44,7 +44,7 @@ const FormInput = ({
     <View className={`gap-2 ${formStyle}`}>
       <Text className='text-base text-neutral-600 font-medium'>{title}</Text>
       <View
-        className='w-full py-3 px-2.5 bg-neutral-100 border-2 border-gray-200 rounded-2xl
+        className='w-full py-3 px-2.5 bg-neutral-100 border-2 border-gray-200 rounded-lg
         focus:border-gray-600 items-center flex-row'
       >
         {icon && icon}

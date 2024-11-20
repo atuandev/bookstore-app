@@ -49,7 +49,7 @@ export default function BookDetail() {
     <>
       <ScrollView className="scroll-pb-10">
         <Box className="min-h-[100vh] gap-4">
-          <Box className="p-4 rounded-lg w-full bg-white">
+          <Box className="p-4 pt-10 rounded-lg w-full bg-white">
             <Image
               source={{ uri: book.bookImages[0].url }}
               alt={book.title}
