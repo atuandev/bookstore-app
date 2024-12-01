@@ -14,6 +14,7 @@ type FormInputProps = {
   value: string
   type?: string
   placeholder?: string
+  onBlur?: () => void
   handleChangeText: (e: string) => void
   formStyle?: string
   keyBoardType?: KeyboardTypeOptions
@@ -30,6 +31,7 @@ const FormInput = ({
   keyBoardType,
   options,
   icon,
+  onBlur,
   handleChangeText,
 }: FormInputProps) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -55,6 +57,7 @@ const FormInput = ({
             setInputValue(text);
             handleChangeText(text);
           }}
+          onBlur={onBlur}
           className='flex-1 font-semibold text-base'
           placeholder={placeholder}
           placeholderTextColor='#bebbbe'

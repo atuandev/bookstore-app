@@ -1,47 +1,70 @@
+import { z } from 'zod'
+import { router } from 'expo-router'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusBar } from 'expo-status-bar'
-import { useState } from 'react'
+import { useTransition } from 'react'
 import { TouchableOpacity } from 'react-native'
 import Toast from 'react-native-toast-message'
 
-import KeyboardProvider from '@/components/common/KeyboardProvider'
+import axiosClient from '@/lib/axiosClient'
+import { TokenResponse } from '@/types/token'
+import { UserResponse } from '@/types/user'
+import { useUserStore } from '@/stores/user'
 import { CustomIcon, IconType } from '@/components/common/CustomIcon'
-import FormInput from '@/components/common/FormInput'
 import { Button, ButtonText } from '@/components/ui/button'
 import { Box } from '@/components/ui/box'
 import { Text } from '@/components/ui/text'
-import { router, useRouter } from 'expo-router'
-import { usersData } from '@/mockData/user'
-import { useUserStore } from '@/stores/user'
+import { setAccessToken } from '@/lib/async-storage'
+import FormInput from '@/components/common/FormInput'
+import KeyboardProvider from '@/components/common/KeyboardProvider'
+
+const LoginSchema = z.object({
+  username: z.string().min(1, {
+    message: 'Username is required',
+  }),
+  password: z.string().min(1, {
+    message: 'Password is required',
+  }),
+})
+
+type LoginSchemaType = {
+  username: string
+  password: string
+}
 
 const SignInScreen = () => {
-  const [formData, setFormData] = useState({
-    username: 'admin',
-    password: 'admin',
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      username: 'admin',
+      password: 'admin123',
+    },
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const { setUser } = useUserStore()
 
-  const handleSubmit = async () => {
-    if (!formData.username || !formData.password) {
-      Toast.show({
-        type: 'error',
-        text1: 'Login failed',
-        text2: 'Please fill in all fields',
-      })
-      return
-    }
-
-    usersData.forEach(user => {
-      if (user.username === formData.username && user.password === formData.password) {
-        setUser(user)
-        router.replace('/(tabs)/books')
-      } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Login failed',
-          text2: 'Invalid username or password',
-        })
-      }
+  const onSubmit = async (data: LoginSchemaType) => {
+    startTransition(() => {
+      (async () => {
+        try {
+          const tokenResponse = await axiosClient.post<TokenResponse>('/auth/login', data)
+          await setAccessToken(tokenResponse.data.data.token)
+          const userResponse = await axiosClient.get<UserResponse>('/users/me')
+          if (userResponse.data) setUser(userResponse.data.data)
+          router.replace('/(tabs)/books')
+        } catch (error) {
+          Toast.show({
+            type: 'error',
+            text1: 'Login failed',
+            text2: (error as Error).message,
+          })
+        }
+      })()
     })
   }
 
@@ -60,49 +83,67 @@ const SignInScreen = () => {
             <Text className="text-xl text-neutral-700 font-semibold mb-4">
               Login to your account
             </Text>
-            <FormInput
-              title="Username"
-              placeholder="Enter your username"
-              value={formData.username}
-              handleChangeText={e => setFormData({ ...formData, username: e })}
-              options={{
-                autoCapitalize: 'none',
-                disableFullscreenUI: isLoading,
-              }}
-              icon={
-                <CustomIcon
-                  icon={{ name: 'user', type: IconType.AntDesign }}
-                  size={20}
-                  color="#6b7280"
-                  className="mr-2"
+            <Controller
+              control={control}
+              name="username"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormInput
+                  title="Username"
+                  placeholder="Enter your username"
+                  value={value}
+                  onBlur={onBlur}
+                  handleChangeText={onChange}
+                  options={{
+                    autoCapitalize: 'none',
+                    disableFullscreenUI: isPending,
+                  }}
+                  icon={
+                    <CustomIcon
+                      icon={{ name: 'user', type: IconType.AntDesign }}
+                      size={20}
+                      color="#6b7280"
+                      className="mr-2"
+                    />
+                  }
+                  formStyle="mt-4"
                 />
-              }
-              formStyle="mt-4"
+              )}
             />
-            <FormInput
-              title="Password"
-              placeholder="Enter your password"
-              value={formData.password}
-              handleChangeText={e => setFormData({ ...formData, password: e })}
-              options={{
-                disableFullscreenUI: isLoading,
-              }}
-              icon={
-                <CustomIcon
-                  icon={{ name: 'lock', type: IconType.AntDesign }}
-                  size={20}
-                  color="#6b7280"
-                  className="mr-2"
+            {errors.username && <Text className="text-red-500">{errors.username.message}</Text>}
+
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormInput
+                  title="Password"
+                  placeholder="Enter your password"
+                  value={value}
+                  onBlur={onBlur}
+                  handleChangeText={onChange}
+                  options={{
+                    disableFullscreenUI: isPending,
+                  }}
+                  icon={
+                    <CustomIcon
+                      icon={{ name: 'lock', type: IconType.AntDesign }}
+                      size={20}
+                      color="#6b7280"
+                      className="mr-2"
+                    />
+                  }
+                  type="password"
+                  formStyle="mt-4"
                 />
-              }
-              type="password"
-              formStyle="mt-4"
+              )}
             />
+            {errors.password && <Text className="text-red-500">{errors.password.message}</Text>}
+
             <Text className="mt-4 text-right text-sm text-gray-500 font-medium">
               Forgot password?
             </Text>
 
-            <Button size="xl" disabled={isLoading} className="mt-16 shadow-sm" onPress={handleSubmit}>
+            <Button size="xl" disabled={isPending} className="mt-16 shadow-sm" onPress={handleSubmit(onSubmit)}>
               <ButtonText>Log in</ButtonText>
             </Button>
 
