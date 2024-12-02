@@ -1,47 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
 
 import { Box } from '@/components/ui/box'
 import { Text } from '@/components/ui/text'
 import { Image } from '@/components/ui/image'
 import { formatVND } from '@/utils/format'
-import { books } from '@/mockData/books'
 import { CustomIcon, IconType } from '@/components/common/CustomIcon'
 import { Divider } from '@/components/ui/divider'
 import { ScrollView } from 'react-native'
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button'
 import { AddIcon, RemoveIcon } from '@/components/ui/icon'
 import { useCartStore } from '@/stores/cart'
+import axiosClient from '@/lib/axiosClient'
+import { Book, BookResponse } from '@/types/book'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 
 export default function BookDetail() {
+  const { slug } = useLocalSearchParams()
   const { addCart, carts, increaseQuantity } = useCartStore()
   const [quantity, setQuantity] = useState(1)
-  const { id } = useLocalSearchParams()
-  const book = books.find(book => book.id === id)
+  const [book, setBook] = useState<Book>()
 
-  if (!book) {
-    return <Text>Book not found</Text>
-  }
+  useEffect(() => {
+    const fetchBook = async () => {
+      const { data } = await axiosClient.get<BookResponse>(`/books/slug/${slug}`)
+      setBook(data.data)
+    }
+    fetchBook()
+  }, [slug])
 
-  const handleIncrease = () => setQuantity(quantity + 1)
-  const handleDecrease = () => {
-    if (quantity === 1) return
-    setQuantity(quantity - 1)
-  }
+  if (!book) return <LoadingSpinner />
+
+  const handleIncrease = () => setQuantity(prevQuantity => prevQuantity + 1)
+  const handleDecrease = () => setQuantity(prevQuantity => Math.max(1, prevQuantity - 1))
 
   const handleAddToCart = () => {
-    const existingCart = carts.find(cart => cart.book.id === book.id)
-    if (existingCart) {
-      increaseQuantity(book.id, quantity)
-      router.push('/cart')
-      return
-    }
-
-    addCart({
-      id: Math.random(),
-      book,
-      quantity,
-    })
+    addCart({ book, quantity })
     router.push('/cart')
   }
 
@@ -58,13 +52,13 @@ export default function BookDetail() {
             />
             <Box className="flex-row gap-3 items-start">
               <Text className="mb-4 text-3xl font-bold text-primary-500">
-                {formatVND(book.price)}
+                {formatVND(book.discountPrice)}
               </Text>
               <Text strikeThrough className="mb-4 text-lg text-typography-500">
-                {formatVND(book.price + 20000)}
+                {formatVND(book.discount && book.price)}
               </Text>
               <Box className="px-2 py-1 bg-primary-50 rounded-md">
-                <Text className="text-sm text-primary-500">-20%</Text>
+                <Text className="text-sm text-primary-500">-{book.discount && book.discount.percent}%</Text>
               </Box>
             </Box>
             <Text size="xl" className="font-semibold text-typography-700 truncate">
@@ -74,7 +68,7 @@ export default function BookDetail() {
               <Box className="flex-row items-center gap-1">
                 <CustomIcon icon={{ name: 'star', type: IconType.AntDesign }} size={14} color="#fbbf24" />
                 <Text className="text-sm font-bold">
-                  {book.rating}
+                  5
                 </Text>
                 <Text className="text-sm text-typography-500 ml-2">
                   Đã bán <Text className="text-sm font-medium text-typography-700">{book.sold}</Text>
@@ -90,12 +84,12 @@ export default function BookDetail() {
             <Text size="xl" bold className="mb-4">Thông tin chi tiết</Text>
             <Box className="flex-row gap-4 py-1.5">
               <Text size="md" className="w-[120px] text-typography-500">Danh mục</Text>
-              <Text size="md" className="font-medium">{book.categoryId}</Text>
+              <Text size="md" className="font-medium">{book.category.name}</Text>
             </Box>
             <Divider className="my-0.5 bg-gray-300" />
             <Box className="flex-row gap-4 py-1.5">
               <Text size="md" className="w-[120px] text-typography-500">Nhà xuất bản</Text>
-              <Text size="md" className="font-medium">{book.publisherId}</Text>
+              <Text size="md" className="font-medium">{book.publisher.name}</Text>
             </Box>
             <Divider className="my-0.5 bg-gray-300" />
             <Box className="flex-row gap-4 py-1.5">

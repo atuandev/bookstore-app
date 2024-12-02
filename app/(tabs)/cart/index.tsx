@@ -16,7 +16,7 @@ export default function CartScreen() {
 
   const totalPrice = carts
     .filter(item => selectedItems.includes(item.book.id))
-    .reduce((acc, item) => acc + item.book.price * item.quantity, 0)
+    .reduce((acc, item) => acc + item.book.discountPrice * item.quantity, 0)
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function CartScreen() {
         <FlatList
           contentContainerClassName="p-2 gap-1"
           data={carts}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item.book.id}
           renderItem={({ item }) => (
             <Box className="p-4 rounded-lg w-full bg-white flex-1 flex-row">
               <Checkbox
@@ -50,7 +50,7 @@ export default function CartScreen() {
                 </Text>
                 <Box className="mt-auto mb-2">
                   <Text className="text-xl font-bold text-primary-500">
-                    {formatVND(item.book.price)}
+                    {formatVND(item.book.discountPrice)}
                   </Text>
                 </Box>
                 <Box className="flex-row justify-between">

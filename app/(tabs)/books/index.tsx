@@ -1,81 +1,51 @@
-import { Box } from '@/components/ui/box'
-import { Text } from '@/components/ui/text'
-import { FlatList, TouchableOpacity } from 'react-native'
-import { useCallback, useState } from 'react'
-import { debounce } from 'lodash'
+import { FlatList } from 'react-native'
+import { useEffect, useState } from 'react'
 
-import { books } from '@/mockData/books'
+import axiosClient from '@/lib/axiosClient'
+import { useListBooksStore } from '@/stores/listBooksStore'
+import { BookListResponse } from '@/types/book'
+import { Box } from '@/components/ui/box'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
+import { ListBooksCategory } from '@/components/books/list-books-category'
+import { ListBooksHeader } from '@/components/books/list-books-header'
 import BookListItem from '@/components/tabs/BookListItem'
-import FormInput from '@/components/common/FormInput'
-import { CustomIcon, IconType } from '@/components/common/CustomIcon'
 import KeyboardProvider from '@/components/common/KeyboardProvider'
 
-const LIST_CATEGORY = [
-  'Tất cả',
-  'Tiểu Thuyết',
-  'Văn Học',
-  'Kỹ Năng Sống',
-  'Lịch Sử',
-  'Truyện Ngắn',
-  'Giáo Dục',
-  'Phong Cách Sống',
-]
-
 export default function HomeScreen() {
-  const [search, setSearch] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('Tất cả')
+  const { pageNo, pageSize, categorySlug, sortBy, search, setPageSize } = useListBooksStore()
+  const [listBooks, setListBooks] = useState<BookListResponse>()
 
-  const debounceSearch = useCallback(
-    debounce((value: string) => {
-      setSearch(value)
-    }, 300),
-    [],
-  )
-
-  const filteredBooks = books.filter((book) => {
-    if (selectedCategory === 'Tất cả') {
-      return book.title.toLowerCase().includes(search.toLowerCase())
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const { data } = await axiosClient.get<BookListResponse>(`/books/list?pageNo=${pageNo}&pageSize=${pageSize}&categorySlug=${categorySlug}&sortBy=${sortBy}&search=${search}`)
+      setListBooks(data)
     }
-    return book.categoryId === selectedCategory && book.title.toLowerCase().includes(search.toLowerCase())
-  })
+    fetchBooks()
+  }, [pageNo, pageSize, categorySlug, sortBy, search])
+
+  const handleEndReached = () => {
+    setPageSize(pageSize + 8)
+  }
+
+  if (!listBooks) return <LoadingSpinner />
 
   return (
     <KeyboardProvider iosHeight={-200}>
-      <Box className="relative w-full">
-        <Box className="absolute top-0 left-0 w-full z-10 bg-primary-500 px-4 pb-2 pt-6">
-          <FormInput
-            value={search}
-            handleChangeText={(value) => debounceSearch(value)}
-            placeholder="Tìm kiếm sách"
-            icon={<CustomIcon icon={{ name: 'search', type: IconType.Ionicons }} size={20} color="gray" />}
-          />
-        </Box>
+      <Box className="w-full">
+        <ListBooksHeader />
+
         <FlatList
           ListHeaderComponent={
-            <FlatList
-              data={LIST_CATEGORY}
-              keyExtractor={item => item}
-              contentContainerClassName="bg-white p-4"
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  key={item}
-                  onPress={() => setSelectedCategory(item)}
-                  className={`px-4 py-2 mr-2 rounded-full bg-primary-50 ${selectedCategory === item ? 'bg-primary-500' : ''}`}
-                >
-                  <Text className={`text-sm ${selectedCategory === item ? 'text-white' : 'text-primary-500'}`}>
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              )} horizontal />
+            <ListBooksCategory />
           }
-
-          data={filteredBooks}
+          data={listBooks.data.items}
           numColumns={2}
           keyExtractor={item => item.id.toString()}
-          contentContainerClassName="pt-[100px]"
           renderItem={({ item }) => (
             <BookListItem book={item} />
           )}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
         />
       </Box>
     </KeyboardProvider>

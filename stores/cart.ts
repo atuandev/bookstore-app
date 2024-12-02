@@ -1,9 +1,9 @@
 import { create } from 'zustand/react'
-import { Cart } from '@/mockData/cart'
+import { CartItem } from '@/types/cart'
 
 type CartType = {
-  carts: Cart[]
-  addCart: (cart: Cart) => void
+  carts: CartItem[]
+  addCart: (cart: CartItem) => void
   removeCart: (bookId: string) => void
   increaseQuantity: (bookId: string, quantity?: number) => void
   decreaseQuantity: (bookId: string) => void
@@ -12,22 +12,45 @@ type CartType = {
 const useCartStore = create<CartType>((set, get) => ({
   carts: [],
 
-  addCart: (cart: Cart) => set(state => ({ carts: [...state.carts, cart] })),
-  removeCart: (bookId: string) => set(state => ({
-    carts: state.carts.filter(cart => cart.book.id !== bookId),
-  })),
-  increaseQuantity: (bookId: string, quantity: number = 1) => set(state => ({
-    carts: state.carts.map(cart => cart.book.id === bookId ? {
-      ...cart,
-      quantity: cart.quantity + quantity,
-    } : cart),
-  })),
-  decreaseQuantity: (bookId: string) => set(state => ({
-    carts: state.carts.map(cart => cart.book.id === bookId ? {
-      ...cart,
-      quantity: Math.max(cart.quantity - 1, 1),
-    } : cart),
-  })),
+  addCart: (cart) => {
+    set((state) => {
+      const existingItem = state.carts.find(p => p.book.id === cart.book.id)
+      if (existingItem) {
+        existingItem.quantity += cart.quantity
+      } else {
+        state.carts.push(cart)
+      }
+      return { carts: [...state.carts] }
+    })
+  },
+  removeCart: (bookId) => {
+    set((state) => {
+      const updatedCart = state.carts.filter(item => item.book.id !== bookId)
+      return { carts: updatedCart }
+    })
+  },
+  increaseQuantity: (bookId, quantity = 1) => {
+    set((state) => {
+      const updatedCart = state.carts.map(item => {
+        if (item.book.id === bookId) {
+          item.quantity += quantity
+        }
+        return item
+      })
+      return { carts: updatedCart }
+    })
+  },
+  decreaseQuantity: (id) => {
+    set((state) => {
+      const updatedCart = state.carts.filter(item => {
+        if (item.book.id === id) {
+          item.quantity = Math.max(1, item.quantity - 1)
+        }
+        return true
+      })
+      return { carts: updatedCart }
+    })
+  },
 }))
 
 export { useCartStore }

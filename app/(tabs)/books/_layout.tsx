@@ -9,7 +9,7 @@ export default function BooksLayout() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="[slug]" options={{ headerShown: false }} />
     </Stack>
   )
 }
