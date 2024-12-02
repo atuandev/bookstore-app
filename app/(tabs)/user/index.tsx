@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native'
 import { ReactElement } from 'react'
 
 import { Box } from '@/components/ui/box'
@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/user'
 import { images } from '@/constants'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { CustomIcon, IconType } from '@/components/common/CustomIcon'
+import { router } from 'expo-router'
 
 type OrderStatusLink = {
   name: string
@@ -72,10 +73,12 @@ export default function UserScreen() {
         </Box>
 
         <Box className="p-4 rounded-lg w-full bg-white">
-          <Box className="flex-row gap-2 justify-between items-center">
-            <Text bold className="text-typography-700">Đơn hàng của tôi</Text>
-            <CustomIcon icon={{ name: 'arrow-forward-ios', type: IconType.MaterialIcon }} size={16} color="#4b5563" />
-          </Box>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/user/order')}>
+            <Box className="flex-row gap-2 justify-between items-center">
+              <Text bold className="text-typography-700">Đơn hàng của tôi</Text>
+              <CustomIcon icon={{ name: 'arrow-forward-ios', type: IconType.MaterialIcon }} size={16} color="#4b5563" />
+            </Box>
+          </TouchableOpacity>
           <Box className="flex-row gap-2 mt-4">
             {ORDER_STATUS_LINK.map((orderStatus, index) => (
               <Box key={index} className="flex-1 items-center gap-2">

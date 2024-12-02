@@ -31,12 +31,13 @@ export default function HomeScreen() {
 
   return (
     <KeyboardProvider iosHeight={-200}>
-      <Box className="w-full">
+      <>
         <ListBooksHeader />
-
         <FlatList
           ListHeaderComponent={
-            <ListBooksCategory />
+            <>
+              <ListBooksCategory />
+            </>
           }
           data={listBooks.data.items}
           numColumns={2}
@@ -46,8 +47,9 @@ export default function HomeScreen() {
           )}
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.5}
+          contentContainerStyle={{ paddingBottom: 100 }}
         />
-      </Box>
+      </>
     </KeyboardProvider>
   )
 }

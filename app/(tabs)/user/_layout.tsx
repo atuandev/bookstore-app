@@ -6,6 +6,8 @@ export default function UserLayout() {
       headerShown: false,
     }}>
       <Stack.Screen name="index" />
+      <Stack.Screen name="order" />
+      <Stack.Screen name="[orderId]" />
     </Stack>
   )
 }

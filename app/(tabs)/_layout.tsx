@@ -25,7 +25,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
-          title: 'Giỏ hàng',
+          headerShown: false,
           tabBarBadge: carts.length,
           tabBarIcon: ({ color }) =>
             <CustomIcon icon={{ name: 'shopping-cart', type: IconType.FontAwesomeIcon }} size={24} color={color} />,

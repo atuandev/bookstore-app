@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 
 import { Box } from '@/components/ui/box'
@@ -9,10 +9,32 @@ import { Image } from '@/components/ui/image'
 import { formatVND } from '@/utils/format'
 import { Checkbox, CheckboxGroup, CheckboxIcon, CheckboxIndicator } from '@/components/ui/checkbox'
 import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/orderStore'
+import { Link, router } from 'expo-router'
 
 export default function CartScreen() {
-  const [selectedItems, setSelectedItems] = useState<string[]>([])
   const { carts, increaseQuantity, decreaseQuantity, removeCart } = useCartStore()
+  const { setOrderDetails } = useOrderStore()
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
+
+  const handleCheckboxChange = (id: string) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(item => item !== id))
+    } else {
+      setSelectedItems([...selectedItems, id])
+    }
+  }
+
+  useEffect(() => {
+    const orderDetails = carts
+      .filter((item) => selectedItems.includes(item.book.id))
+      .map((item) => ({
+        book: item.book,
+        quantity: item.quantity,
+        price: item.book.discountPrice,
+      }))
+    setOrderDetails(orderDetails)
+  }, [selectedItems, carts, setOrderDetails])
 
   const totalPrice = carts
     .filter(item => selectedItems.includes(item.book.id))
@@ -32,7 +54,9 @@ export default function CartScreen() {
             <Box className="p-4 rounded-lg w-full bg-white flex-1 flex-row">
               <Checkbox
                 size="md"
+                isChecked={selectedItems.includes(item.book.id)}
                 value={item.book.id}
+                onChange={() => handleCheckboxChange(item.book.id)}
               >
                 <CheckboxIndicator>
                   <CheckboxIcon as={CheckIcon} />
@@ -83,9 +107,9 @@ export default function CartScreen() {
             {formatVND(totalPrice)}
           </Text>
         </Box>
-        <Button size="lg">
-          <ButtonText>Thanh toán</ButtonText>
-        </Button>
+          <Button size="lg" onPress={() => router.push('/(tabs)/cart/order')}>
+            <ButtonText>Thanh toán</ButtonText>
+          </Button>
       </Box>
     </>
   )
